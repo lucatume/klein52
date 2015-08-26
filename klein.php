@@ -256,6 +256,14 @@ function dispatch( $uri = null, $req_method = null, array $params = null, $captu
 	}
 }
 
+// Dispatch the request to the approriate route(s) or continue
+function dispatch_or_continue( $uri = null, $req_method = null, array $params = null ) {
+	$found = dispatch( $uri, $req_method, $params, true );
+	if ( $found ) {
+		die( $found );
+	}
+}
+
 // Compiles a route string to a regular expression
 function compile_route( $route ) {
 	if ( preg_match_all( '`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER ) ) {
@@ -1012,6 +1020,7 @@ class _Headers {
 		return "$key: $value";
 	}
 }
+
 
 _Request::$_headers = _Response::$_headers = new _Headers;
 
