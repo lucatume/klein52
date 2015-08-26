@@ -10,10 +10,10 @@ $__namespace = null;
 function respond( $method, $route = '*', $callback = null ) {
 	global $__routes, $__namespace;
 
-	$args     = func_get_args();
-	$callback = array_pop( $args );
-	$route    = array_pop( $args );
-	$method   = array_pop( $args );
+	$args        = func_get_args();
+	$callback    = array_pop( $args );
+	$route       = array_pop( $args );
+	$method      = array_pop( $args );
 
 	if ( null === $route ) {
 		$route = '*';
@@ -75,7 +75,7 @@ function startSession() {
 }
 
 // Dispatch the request to the approriate route(s)
-function dispatch( $uri = null, $req_method = null, array $params = null, $capture = false ) {
+function dispatch( $uri = null, $req_method = null, array $params = null, $capture = false, $passthru = false ) {
 	global $__routes;
 
 	// Pass $request, $response, and a blank object for sharing scope through each callback
@@ -248,6 +248,10 @@ function dispatch( $uri = null, $req_method = null, array $params = null, $captu
 	}
 
 	if ( $capture ) {
+		if ( $passthru && $matched == 0 ) {
+			ob_end_clean();
+			return null;
+		}
 		return ob_get_clean();
 	} elseif ( $response->chunked ) {
 		$response->chunk();
@@ -258,7 +262,7 @@ function dispatch( $uri = null, $req_method = null, array $params = null, $captu
 
 // Dispatch the request to the approriate route(s) or continue
 function dispatch_or_continue( $uri = null, $req_method = null, array $params = null ) {
-	$found = dispatch( $uri, $req_method, $params, true );
+	$found = dispatch( $uri, $req_method, $params, true, true );
 	if ( $found ) {
 		die( $found );
 	}
