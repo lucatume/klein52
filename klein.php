@@ -250,7 +250,8 @@ function dispatch( $uri = null, $req_method = null, array $params = null, $captu
 	if ( $capture ) {
 		if ( $passthru && $matched == 0 ) {
 			ob_end_clean();
-			return null;
+
+			return false;
 		}
 		return ob_get_clean();
 	} elseif ( $response->chunked ) {
