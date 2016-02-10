@@ -95,7 +95,7 @@ function dispatch( $uri = null, $req_method = null, array $params = null, $captu
 		$uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '/';
 	}
 	if ( false !== strpos( $uri, '?' ) ) {
-		$uri = strstr( $uri, '?', true );
+		$uri = str_replace(stristr($uri,"?"),"",$uri);
 	}
 	if ( null === $req_method ) {
 		$req_method = isset( $_SERVER['REQUEST_METHOD'] ) ? $_SERVER['REQUEST_METHOD'] : 'GET';
@@ -581,7 +581,7 @@ class _Response extends StdClass {
 
 		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '/';
 		if ( strpos( $request_uri, '?' ) !== false ) {
-			$request_uri = strstr( $request_uri, '?', true );
+			$request_uri = str_replace(stristr($request_uri,"?"),"",$request_uri);
 		}
 
 		return $request_uri . ( ! empty( $query ) ? '?' . http_build_query( $query ) : null );
