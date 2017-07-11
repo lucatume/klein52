@@ -4,6 +4,7 @@
         <testsuite name='All'>
             <file>tests/HeadersTest.php</file>
             <file phpVersion="5.3.0" phpVersionOperator=">=">tests/RoutesTest.php</file>
+            <file >tests/Routes52Test.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
