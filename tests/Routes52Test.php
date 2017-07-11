@@ -240,6 +240,7 @@ class Test52Class {
 class Routes52Test extends PHPUnit_Framework_TestCase {
 
 	protected function setUp() {
+		_Request::$_headers->silent( true );
 		global $__routes;
 		$__routes = array();
 
@@ -371,8 +372,6 @@ class Routes52Test extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testParamsAlphaNum() {
-		_Response::$_headers->silent(true);
-
 		respond( '/[a:audible]', 'closure24' );
 
 		$this->assertOutputSame( 'blue42', 'closure25' );
@@ -381,8 +380,6 @@ class Routes52Test extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testParamsHex() {
-		_Response::$_headers->silent(true);
-
 		respond( '/[h:hexcolor]', 'closure28' );
 
 		$this->assertOutputSame( '00f', 'closure29' );
