@@ -3,7 +3,7 @@
 require_once dirname(__FILE__) . '/setup.php';
 
 class TestClass {
-	static function GET($r, $r, $a) {
+	static function GET($r, $m, $a) {
 		echo 'ok';
 	}
 }
@@ -38,7 +38,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 				$route_namespace = '/' . basename( $file, '.php' );
 				$route_namespaces[] = $route_namespace;
 
-				with( $route_namespace, $route_directory . $file );
+				inNamespace( $route_namespace, $route_directory . $file );
 			}
 		}
 
@@ -62,9 +62,9 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 
 	public function testAppReference() {
 		$this->expectOutputString( 'ab' );
-		respond( '/', function($r, $r ,$a){ $a->state = 'a'; });
-		respond( '/', function($r, $r ,$a){ $a->state .= 'b'; });
-		respond( '/', function($r, $r ,$a){ print $a->state; });
+		respond( '/', function($r, $m ,$a){ $a->state = 'a'; });
+		respond( '/', function($r, $m ,$a){ $a->state .= 'b'; });
+		respond( '/', function($r, $m ,$a){ print $a->state; });
 		dispatch( '/' );
 	}
 
@@ -126,16 +126,16 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testParamsIntegerSuccess() {
-		$this->expectOutputString( "string(3) \"987\"\n" );
+		$this->expectOutputString( "987" );
 
-		respond( '/[i:age]', function($request){ var_dump( $request->param('age') ); });
+		respond( '/[i:age]', function($request){ echo $request->param('age'); });
 		dispatch( '/987' );
 	}
 
 	public function testParamsIntegerFail() {
 		$this->expectOutputString( '404 Code' );
 
-		respond( '/[i:age]', function($request){ var_dump( $request->param('age') ); });
+		respond( '/[i:age]', function($request){ echo $request->param('age'); });
 		respond( '404', function(){ echo '404 Code'; } );
 		dispatch( '/blue' );
 	}
@@ -256,7 +256,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testNSDispatch() {
-		with('/u', function () {
+		inNamespace('/u', function () {
 			respond('GET', '/?',     function ($request, $response) { echo "slash";   });
 			respond('GET', '/[:id]', function ($request, $response) { echo "id"; });
 		});

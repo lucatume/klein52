@@ -1,5 +1,5 @@
-**klein.php** is a lightning fast router for PHP 5.3+
-This version is a fork of **[klein.php](https://github.com/chriso/klein.php)** v. `1.2.0` that has been modified to run in PHP `5.2`; this is not up to date with **[klein.php](https://github.com/chriso/klein.php)** latest version.
+**klein.php** is a lightning fast router for PHP 5.3+; **klein52** is its port to PHP 5.2 compatible code.
+This version is a fork of **[klein.php](https://github.com/chriso/klein.php)** v. `1.2.0` that has been modified to run in PHP `5.2`; this is not up to date with **[klein.php](https://github.com/chriso/klein.php)** latest version.  
 
 * Flexible regular expression routing (inspired by [Sinatra](http://www.sinatrarb.com/))
 * A set of [boilerplate methods](https://github.com/chriso/klein.php/wiki/API) for rapidly building web apps

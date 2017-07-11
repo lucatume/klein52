@@ -63,7 +63,7 @@ function respond( $method, $route = '*', $callback = null ) {
 }
 
 // Each route defined inside $routes will be in the $namespace
-function with( $namespace, $routes ) {
+function inNamespace( $namespace, $routes ) {
 	global $__namespace;
 	$previous = $__namespace;
 	$__namespace .= $namespace;
@@ -73,6 +73,13 @@ function with( $namespace, $routes ) {
 		require $routes;
 	}
 	$__namespace = $previous;
+}
+
+//alias the `with` function to `inNamespace` if possible
+if ( ! function_exists( 'with' ) ) {
+	function with( $namespace, $routes ) {
+		inNamespace( $namespace, $routes );
+	}
 }
 
 function startSession() {
