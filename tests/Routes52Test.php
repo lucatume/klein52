@@ -445,8 +445,8 @@ class Routes52Test extends PHPUnit_Framework_TestCase {
 		respond( null, 'closure49' );
 		respond( '/endpoint', 'closure50' );
 		respond( 'GET', null, 'closure51' );
-		respond( [ 'GET', 'POST' ], null, 'closure52' );
-		respond( [ 'GET', 'POST' ], '/endpoint', 'closure53' );
+		respond( array( 'GET', 'POST' ), null, 'closure52' );
+		respond( array( 'GET', 'POST' ), '/endpoint', 'closure53' );
 		dispatch( '/endpoint' );
 	}
 
