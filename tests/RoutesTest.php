@@ -8,6 +8,8 @@ class TestClass {
 class RoutesTest extends PHPUnit_Framework_TestCase {
 
 	protected function setUp() {
+		_Request::$_headers->silent( true );
+
 		global $__routes;
 		$__routes = array();
 
@@ -15,6 +17,10 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		$__namespace = null;
 
 		$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
+	}
+
+	protected function tearDown() {
+		_Request::$_headers->silent( false );
 	}
 
 	protected function assertOutputSame($expected, $callback, $message = '') {
