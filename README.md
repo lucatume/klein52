@@ -1,5 +1,6 @@
 **klein.php** is a lightning fast router for PHP 5.3+; **klein52** is its port to PHP 5.2 compatible code.
 This version is a fork of **[klein.php](https://github.com/chriso/klein.php)** v. `1.2.0` that has been modified to run in PHP `5.2`; this is not up to date with **[klein.php](https://github.com/chriso/klein.php)** latest version.  
+All kudos to the original author.
 
 * Flexible regular expression routing (inspired by [Sinatra](http://www.sinatrarb.com/))
 * A set of [boilerplate methods](https://github.com/chriso/klein.php/wiki/API) for rapidly building web apps
@@ -120,7 +121,7 @@ respond('POST', '/users/[i:id]/edit', function ($request, $response) {
 
 ```php
 <?php
-with('/users', function () {
+inNamespace('/users', function () {
 
     respond('GET', '/?', function ($request, $response) {
         // Show all users
@@ -133,7 +134,7 @@ with('/users', function () {
 });
 
 foreach(array('projects', 'posts') as $controller) {
-    with("/$controller", "controllers/$controller.php");
+    inNamespace("/$controller", "controllers/$controller.php");
 }
 ```
 
