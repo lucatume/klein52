@@ -1,7 +1,4 @@
 <?php
-
-require_once dirname(__FILE__) . '/setup.php';
-
 class TestClass {
 	static function GET($r, $m, $a) {
 		echo 'ok';

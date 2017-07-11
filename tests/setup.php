@@ -1,10 +1,18 @@
 <?php
 
-require_once(dirname(__FILE__)). '/../vendor/autoload_52.php';
+require_once ( dirname( __FILE__ ) ) . '/../vendor/autoload_52.php';
 
 class HeadersEcho extends _Headers {
-	public function header($key, $value = null) {
-		echo $this->_header($key, $value) . "\n";
+	protected $silent = false;
+
+	public function header( $key, $value = null ) {
+		if ( ! $this->silent ) {
+			echo $this->_header( $key, $value ) . "\n";
+		}
+	}
+
+	public function silent( $silent ) {
+		$this->silent = $silent;
 	}
 }
 

@@ -1,7 +1,4 @@
 <?php
-
-require_once dirname( __FILE__ ) . '/setup.php';
-
 function closure80() {
 	respond( 'GET', '/?', 'closure66' );
 	respond( 'GET', '/[:id]', 'closure67' );
@@ -252,6 +249,10 @@ class Routes52Test extends PHPUnit_Framework_TestCase {
 		$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
 	}
 
+	protected function tearDown() {
+		_Request::$_headers->silent( false );
+	}
+
 	protected function assertOutputSame( $expected, $callback, $message = '' ) {
 		ob_start();
 		call_user_func( $callback );
@@ -370,6 +371,8 @@ class Routes52Test extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testParamsAlphaNum() {
+		_Response::$_headers->silent(true);
+
 		respond( '/[a:audible]', 'closure24' );
 
 		$this->assertOutputSame( 'blue42', 'closure25' );
@@ -378,6 +381,8 @@ class Routes52Test extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testParamsHex() {
+		_Response::$_headers->silent(true);
+
 		respond( '/[h:hexcolor]', 'closure28' );
 
 		$this->assertOutputSame( '00f', 'closure29' );
