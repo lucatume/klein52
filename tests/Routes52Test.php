@@ -240,7 +240,7 @@ class Routes52Test extends PHPUnit_Framework_TestCase {
 
 	protected function setUp() {
 		global $__routes;
-		$__routes = [];
+		$__routes = array();
 
 		global $__namespace;
 		$__namespace = null;
@@ -259,7 +259,7 @@ class Routes52Test extends PHPUnit_Framework_TestCase {
 	protected function loadExternalRoutes() {
 		$route_directory  = __DIR__ . '/routes/';
 		$route_files      = scandir( $route_directory );
-		$route_namespaces = [];
+		$route_namespaces = array();
 
 		foreach ( $route_files as $file ) {
 			if ( is_file( $route_directory . $file ) ) {
@@ -282,7 +282,7 @@ class Routes52Test extends PHPUnit_Framework_TestCase {
 
 	public function testCallable() {
 		$this->expectOutputString( 'okok' );
-		respond( '/', [ 'Test52Class', 'GET' ] );
+		respond( '/', array('Test52Class', 'GET' ));
 		respond( '/', 'Test52Class::GET' );
 		dispatch( '/' );
 	}
