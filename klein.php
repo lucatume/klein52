@@ -280,8 +280,13 @@ function dispatch( $uri = null, $req_method = null, array $params = null, $captu
 function dispatch_or_continue( $uri = null, $req_method = null, array $params = null ) {
 	$found = dispatch( $uri, $req_method, $params, true, true );
 	if ( $found ) {
-		die( $found );
-	}
+		if (function_exists('apply_filters')) {
+			$dieCallback = apply_filters('klein_die_handler', 'die');
+		} else {
+			$dieCallback = 'die';
+		}
+
+		call_user_func($dieCallback, $found);	}
 }
 
 // Compiles a route string to a regular expression
