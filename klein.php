@@ -276,17 +276,43 @@ function dispatch( $uri = null, $req_method = null, array $params = null, $captu
 	}
 }
 
-// Dispatch the request to the approriate route(s) or continue
-function dispatch_or_continue( $uri = null, $req_method = null, array $params = null ) {
-	$found = dispatch( $uri, $req_method, $params, true, true );
-	if ( $found ) {
+/**
+ * Dispatches the request to the first available matching routes and dies, or continues the script execution.
+ *
+ * @param            string uri
+ * @param string     $req_method
+ * @param array|null $params
+ */
+function dispatch_or_continue($uri = null, $req_method = null, array $params = null) {
+	$found = dispatch($uri, $req_method, $params, true, true);
+	if ($found) {
+		$dieCallback = null;
+
 		if (function_exists('apply_filters')) {
-			$dieCallback = apply_filters('klein_die_handler', 'die');
-		} else {
-			$dieCallback = 'die';
+			/**
+			 * Filters the die (output) handler to use when a route is matched.
+			 *
+			 * Use the special value "echo "To just echo the result and return, e.g.:
+			 *
+			 *        add_filter('klein_die_handler', function(){
+			 *            return 'echo';
+			 *        });
+			 *
+			 * @params callabe $handler The function that will be called to output the request; default `die`
+			 */
+			$dieCallback = apply_filters('klein_die_handler', null);
 		}
 
-		call_user_func($dieCallback, $found);	}
+		switch ($dieCallback) {
+			case 'echo':
+				echo $found;
+				return;
+			case null:
+				die ($found);
+			default:
+				$dieCallback($found);
+		}
+	}
 }
 
 // Compiles a route string to a regular expression
