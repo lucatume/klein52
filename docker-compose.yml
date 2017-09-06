@@ -1,9 +1,0 @@
-version: "2"
-
-services:
-    php:
-        environment:
-            - XDEBUG_REMOTE_HOST=${XDEBUG_REMOTE_HOST}
-        build: ./docker/build/php
-        volumes:
-            - .:/var/www/src
