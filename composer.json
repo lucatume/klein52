@@ -43,7 +43,7 @@
   ],
   "autoload": {
     "files": [
-      "klein.php"
+      "klein_load.php"
     ]
   },
   "scripts": {

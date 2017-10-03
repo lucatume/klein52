@@ -1,16 +1,15 @@
 <?php
-
-class Test52Class {
+class WPTest52Class {
 
 	static function GET( $r, $m, $a ) {
 		echo 'ok';
 	}
 }
 
-class Routes52Test extends PHPUnit_Framework_TestCase {
+class WPRoutes52Test extends PHPUnit_Framework_TestCase {
 
 	protected function setUp() {
-		_Request::$_headers->silent( true );
+		klein_Request::$_headers->silent( true );
 		global $__klein_routes;
 		$__klein_routes = array();
 
@@ -21,7 +20,7 @@ class Routes52Test extends PHPUnit_Framework_TestCase {
 	}
 
 	protected function tearDown() {
-		_Request::$_headers->silent( false );
+		klein_Request::$_headers->silent( false );
 	}
 
 	protected function assertOutputSame( $expected, $callback, $message = '' ) {
@@ -51,98 +50,98 @@ class Routes52Test extends PHPUnit_Framework_TestCase {
 
 	public function testBasic() {
 		$this->expectOutputString( 'x' );
-		respond( '/', 'closure1' );
-		respond( '/something', 'closure2' );
-		dispatch( '/' );
+		klein_respond( '/', 'closure1' );
+		klein_respond( '/something', 'closure2' );
+		klein_dispatch( '/' );
 	}
 
 	public function testCallable() {
 		$this->expectOutputString( 'okok' );
-		respond( '/', array('Test52Class', 'GET' ));
-		respond( '/', 'Test52Class::GET' );
-		dispatch( '/' );
+		klein_respond( '/', array('WPTest52Class', 'GET' ));
+		klein_respond( '/', 'WPTest52Class::GET' );
+		klein_dispatch( '/' );
 	}
 
 	public function testAppReference() {
 		$this->expectOutputString( 'ab' );
-		respond( '/', 'closure3' );
-		respond( '/', 'closure4' );
-		respond( '/', 'closure5' );
-		dispatch( '/' );
+		klein_respond( '/', 'closure3' );
+		klein_respond( '/', 'closure4' );
+		klein_respond( '/', 'closure5' );
+		klein_dispatch( '/' );
 	}
 
 	public function testCatchallImplicit() {
 		$this->expectOutputString( 'b' );
 
-		respond( '/one', 'closure6' );
-		respond( 'closure7' );
-		respond( '/two', 'closure8' );
-		respond( '/three', 'closure9' );
-		dispatch( '/two' );
+		klein_respond( '/one', 'closure6' );
+		klein_respond( 'closure7' );
+		klein_respond( '/two', 'closure8' );
+		klein_respond( '/three', 'closure9' );
+		klein_dispatch( '/two' );
 	}
 
 	public function testCatchallAsterisk() {
 		$this->expectOutputString( 'b' );
-		respond( '/one', 'closure10' );
-		respond( '*', 'closure11' );
-		respond( '/two', 'closure12' );
-		respond( '/three', 'closure13' );
-		dispatch( '/two' );
+		klein_respond( '/one', 'closure10' );
+		klein_respond( '*', 'closure11' );
+		klein_respond( '/two', 'closure12' );
+		klein_respond( '/three', 'closure13' );
+		klein_dispatch( '/two' );
 	}
 
 	public function testCatchallImplicitTriggers404() {
 		$this->expectOutputString( "b404\n" );;
-		respond( 'closure14' );
-		respond( 404, 'closure15' );
-		dispatch( '/' );
+		klein_respond( 'closure14' );
+		klein_respond( 404, 'closure15' );
+		klein_dispatch( '/' );
 	}
 
 	public function testRegex() {
 		$this->expectOutputString( 'z' );
 
-		respond( '@/bar', 'closure16' );
-		dispatch( '/bar' );
+		klein_respond( '@/bar', 'closure16' );
+		klein_dispatch( '/bar' );
 	}
 
 	public function testRegexNegate() {
 		$this->expectOutputString( "y" );
 
-		respond( '!@/foo', 'closure17' );
-		dispatch( '/bar' );
+		klein_respond( '!@/foo', 'closure17' );
+		klein_dispatch( '/bar' );
 	}
 
 	public function test404() {
 		$this->expectOutputString( "404\n" );
 
-		respond( '/', 'closure18' );
-		respond( 404, 'closure19' );
-		dispatch( '/foo' );
+		klein_respond( '/', 'closure18' );
+		klein_respond( 404, 'closure19' );
+		klein_dispatch( '/foo' );
 	}
 
 	public function testParamsBasic() {
 		$this->expectOutputString( 'blue' );
 
-		respond( '/[:color]', 'closure20' );
-		dispatch( '/blue' );
+		klein_respond( '/[:color]', 'closure20' );
+		klein_dispatch( '/blue' );
 	}
 
 	public function testParamsIntegerSuccess() {
 		$this->expectOutputString( "987" );
 
-		respond( '/[i:age]', 'closure21' );
-		dispatch( '/987' );
+		klein_respond( '/[i:age]', 'closure21' );
+		klein_dispatch( '/987' );
 	}
 
 	public function testParamsIntegerFail() {
 		$this->expectOutputString( '404 Code' );
 
-		respond( '/[i:age]', 'closure22' );
-		respond( '404', 'closure23' );
-		dispatch( '/blue' );
+		klein_respond( '/[i:age]', 'closure22' );
+		klein_respond( '404', 'closure23' );
+		klein_dispatch( '/blue' );
 	}
 
 	public function testParamsAlphaNum() {
-		respond( '/[a:audible]', 'closure24' );
+		klein_respond( '/[a:audible]', 'closure24' );
 
 		$this->assertOutputSame( 'blue42', 'closure25' );
 		$this->assertOutputSame( '', 'closure26' );
@@ -150,7 +149,7 @@ class Routes52Test extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testParamsHex() {
-		respond( '/[h:hexcolor]', 'closure28' );
+		klein_respond( '/[h:hexcolor]', 'closure28' );
 
 		$this->assertOutputSame( '00f', 'closure29' );
 		$this->assertOutputSame( 'abc123', 'closure30' );
@@ -162,41 +161,41 @@ class Routes52Test extends PHPUnit_Framework_TestCase {
 	public function test404TriggersOnce() {
 		$this->expectOutputString( '404 Code' );
 
-		respond( '404', 'closure35' );
-		dispatch( '/notroute' );
+		klein_respond( '404', 'closure35' );
+		klein_dispatch( '/notroute' );
 	}
 
 	public function testMethodCatchAll() {
 		$this->expectOutputString( 'yup!123' );
 
-		respond( 'POST', null, 'closure36' );
-		respond( 'POST', '*', 'closure37' );
-		respond( 'POST', '/', 'closure38' );
-		respond( 'closure39' );
-		dispatch( '/', 'POST' );
+		klein_respond( 'POST', null, 'closure36' );
+		klein_respond( 'POST', '*', 'closure37' );
+		klein_respond( 'POST', '/', 'closure38' );
+		klein_respond( 'closure39' );
+		klein_dispatch( '/', 'POST' );
 	}
 
 	public function testLazyTrailingMatch() {
 		$this->expectOutputString( 'this-is-a-title-123' );
 
-		respond( '/posts/[*:title][i:id]', 'closure40' );
-		dispatch( '/posts/this-is-a-title-123' );
+		klein_respond( '/posts/[*:title][i:id]', 'closure40' );
+		klein_dispatch( '/posts/this-is-a-title-123' );
 	}
 
 	public function testFormatMatch() {
 		$this->expectOutputString( 'xml' );
 
-		respond( '/output.[xml|json:format]', 'closure41' );
-		dispatch( '/output.xml' );
+		klein_respond( '/output.[xml|json:format]', 'closure41' );
+		klein_dispatch( '/output.xml' );
 	}
 
 	public function testDotSeparator() {
 		$this->expectOutputString( 'matchA:slug=ABCD_E--matchB:slug=ABCD_E--' );
 
-		respond( '/[*:cpath]/[:slug].[:format]', 'closure42' );
-		respond( '/[*:cpath]/[:slug].[:format]?', 'closure43' );
-		respond( '/[*:cpath]/[a:slug].[:format]?', 'closure44' );
-		dispatch( "/category1/categoryX/ABCD_E.php" );
+		klein_respond( '/[*:cpath]/[:slug].[:format]', 'closure42' );
+		klein_respond( '/[*:cpath]/[:slug].[:format]?', 'closure43' );
+		klein_respond( '/[*:cpath]/[a:slug].[:format]?', 'closure44' );
+		klein_dispatch( "/category1/categoryX/ABCD_E.php" );
 		$this->assertOutputSame(
 			'matchA:slug=ABCD_E--matchB:slug=ABCD_E--',
 			'closure45'
@@ -210,24 +209,24 @@ class Routes52Test extends PHPUnit_Framework_TestCase {
 	public function testControllerActionStyleRouteMatch() {
 		$this->expectOutputString( 'donkey-kick' );
 
-		respond( '/[:controller]?/[:action]?', 'closure47' );
-		dispatch( '/donkey/kick' );
+		klein_respond( '/[:controller]?/[:action]?', 'closure47' );
+		klein_dispatch( '/donkey/kick' );
 	}
 
 	public function testRespondArgumentOrder() {
 		$this->expectOutputString( 'abcdef' );
 
-		respond( 'closure48' );
-		respond( null, 'closure49' );
-		respond( '/endpoint', 'closure50' );
-		respond( 'GET', null, 'closure51' );
-		respond( array( 'GET', 'POST' ), null, 'closure52' );
-		respond( array( 'GET', 'POST' ), '/endpoint', 'closure53' );
-		dispatch( '/endpoint' );
+		klein_respond( 'closure48' );
+		klein_respond( null, 'closure49' );
+		klein_respond( '/endpoint', 'closure50' );
+		klein_respond( 'GET', null, 'closure51' );
+		klein_respond( array( 'GET', 'POST' ), null, 'closure52' );
+		klein_respond( array( 'GET', 'POST' ), '/endpoint', 'closure53' );
+		klein_dispatch( '/endpoint' );
 	}
 
 	public function testTrailingMatch() {
-		respond( '/?[*:trailing]/dog/?', 'closure54' );
+		klein_respond( '/?[*:trailing]/dog/?', 'closure54' );
 
 		$this->assertOutputSame( 'yup', 'closure55' );
 		$this->assertOutputSame( 'yup', 'closure56' );
@@ -238,7 +237,7 @@ class Routes52Test extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testTrailingPossessiveMatch() {
-		respond( '/sub-dir/[**:trailing]', 'closure61' );
+		klein_respond( '/sub-dir/[**:trailing]', 'closure61' );
 
 		$this->assertOutputSame( 'yup', 'closure62' );
 		$this->assertOutputSame( 'yup', 'closure63' );
@@ -248,7 +247,7 @@ class Routes52Test extends PHPUnit_Framework_TestCase {
 
 	public function testNSDispatch() {
 		inNamespace( '/u', 'closure80' );
-		respond( 404, 'closure68' );
+		klein_respond( 404, 'closure68' );
 
 		$this->assertOutputSame( "slash", 'closure69' );
 		$this->assertOutputSame( "slash", 'closure70' );

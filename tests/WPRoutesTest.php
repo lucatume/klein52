@@ -1,14 +1,14 @@
 <?php
-class TestClass {
+class TestClass2 {
 	static function GET($r, $m, $a) {
 		echo 'ok';
 	}
 }
 
-class RoutesTest extends PHPUnit_Framework_TestCase {
+class WPRoutesTest extends PHPUnit_Framework_TestCase {
 
 	protected function setUp() {
-		_Request::$_headers->silent( true );
+		klein_Request::$_headers->silent( true );
 
 		global $__klein_routes;
 		$__klein_routes = array();
@@ -20,7 +20,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	protected function tearDown() {
-		_Request::$_headers->silent( false );
+		klein_Request::$_headers->silent( false );
 	}
 
 	protected function assertOutputSame($expected, $callback, $message = '') {
@@ -41,7 +41,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 				$route_namespace = '/' . basename( $file, '.php' );
 				$route_namespaces[] = $route_namespace;
 
-				inNamespace( $route_namespace, $route_directory . $file );
+				klein_with( $route_namespace, $route_directory . $file );
 			}
 		}
 
@@ -53,14 +53,14 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 
 		respond( '/', function(){ echo 'x'; });
 		respond( '/something', function(){ echo 'y'; });
-		dispatch( '/' );
+		klein_dispatch( '/' );
 	}
 
 	public function testCallable() {
 		$this->expectOutputString( 'okok' );
 		respond( '/', array('TestClass', 'GET'));
 		respond( '/', 'TestClass::GET');
-		dispatch( '/' );
+		klein_dispatch( '/' );
 	}
 
 	public function testAppReference() {
@@ -68,7 +68,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond( '/', function($r, $m ,$a){ $a->state = 'a'; });
 		respond( '/', function($r, $m ,$a){ $a->state .= 'b'; });
 		respond( '/', function($r, $m ,$a){ print $a->state; });
-		dispatch( '/' );
+		klein_dispatch( '/' );
 	}
 
 	public function testCatchallImplicit() {
@@ -78,7 +78,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond( function(){ echo 'b'; });
 		respond( '/two', function(){ } );
 		respond( '/three', function(){ echo 'c'; } );
-		dispatch( '/two' );
+		klein_dispatch( '/two' );
 	}
 
 	public function testCatchallAsterisk() {
@@ -88,7 +88,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond( '*', function(){ echo 'b'; } );
 		respond( '/two', function(){ } );
 		respond( '/three', function(){ echo 'c'; } );
-		dispatch( '/two' );
+		klein_dispatch( '/two' );
 	}
 
 	public function testCatchallImplicitTriggers404() {
@@ -96,21 +96,21 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 
 		respond( function(){ echo 'b'; });
 		respond( 404, function(){ echo "404\n"; } );
-		dispatch( '/' );
+		klein_dispatch( '/' );
 	}
 
 	public function testRegex() {
 		$this->expectOutputString( 'z' );
 
 		respond( '@/bar', function(){ echo 'z'; });
-		dispatch( '/bar' );
+		klein_dispatch( '/bar' );
 	}
 
 	public function testRegexNegate() {
 		$this->expectOutputString( "y" );
 
 		respond( '!@/foo', function(){ echo 'y'; });
-		dispatch( '/bar' );
+		klein_dispatch( '/bar' );
 	}
 
 	public function test404() {
@@ -118,21 +118,21 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 
 		respond( '/', function(){ echo 'a'; } );
 		respond( 404, function(){ echo "404\n"; } );
-		dispatch( '/foo' );
+		klein_dispatch( '/foo' );
 	}
 
 	public function testParamsBasic() {
 		$this->expectOutputString( 'blue' );
 
 		respond( '/[:color]', function($request){ echo $request->param('color'); });
-		dispatch( '/blue' );
+		klein_dispatch( '/blue' );
 	}
 
 	public function testParamsIntegerSuccess() {
 		$this->expectOutputString( "987" );
 
 		respond( '/[i:age]', function($request){ echo $request->param('age'); });
-		dispatch( '/987' );
+		klein_dispatch( '/987' );
 	}
 
 	public function testParamsIntegerFail() {
@@ -140,25 +140,25 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 
 		respond( '/[i:age]', function($request){ echo $request->param('age'); });
 		respond( '404', function(){ echo '404 Code'; } );
-		dispatch( '/blue' );
+		klein_dispatch( '/blue' );
 	}
 
 	public function testParamsAlphaNum() {
 		respond( '/[a:audible]', function($request){ echo $request->param('audible'); });
 
-		$this->assertOutputSame( 'blue42',  function(){ dispatch('/blue42'); });
-		$this->assertOutputSame( '',        function(){ dispatch('/texas-29'); });
-		$this->assertOutputSame( '',        function(){ dispatch('/texas29!'); });
+		$this->assertOutputSame( 'blue42',  function(){ klein_dispatch('/blue42'); });
+		$this->assertOutputSame( '',        function(){ klein_dispatch('/texas-29'); });
+		$this->assertOutputSame( '',        function(){ klein_dispatch('/texas29!'); });
 	}
 
 	public function testParamsHex() {
 		respond( '/[h:hexcolor]', function($request){ echo $request->param('hexcolor'); });
 
-		$this->assertOutputSame( '00f',     function(){ dispatch('/00f'); });
-		$this->assertOutputSame( 'abc123',  function(){ dispatch('/abc123'); });
-		$this->assertOutputSame( '',        function(){ dispatch('/876zih'); });
-		$this->assertOutputSame( '',        function(){ dispatch('/00g'); });
-		$this->assertOutputSame( '',        function(){ dispatch('/hi23'); });
+		$this->assertOutputSame( '00f',     function(){ klein_dispatch('/00f'); });
+		$this->assertOutputSame( 'abc123',  function(){ klein_dispatch('/abc123'); });
+		$this->assertOutputSame( '',        function(){ klein_dispatch('/876zih'); });
+		$this->assertOutputSame( '',        function(){ klein_dispatch('/00g'); });
+		$this->assertOutputSame( '',        function(){ klein_dispatch('/hi23'); });
 	}
 
 	public function test404TriggersOnce() {
@@ -166,7 +166,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 
 		respond( function(){ echo "d"; } );
 		respond( '404', function(){ echo '404 Code'; } );
-		dispatch( '/notroute' );
+		klein_dispatch( '/notroute' );
 	}
 
 	public function testMethodCatchAll() {
@@ -176,7 +176,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond( 'POST', '*', function($request){ echo '1'; });
 		respond( 'POST', '/', function($request){ echo '2'; });
 		respond( function($request){ echo '3'; });
-		dispatch( '/', 'POST' );
+		klein_dispatch( '/', 'POST' );
 	}
 
 	public function testLazyTrailingMatch() {
@@ -186,7 +186,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 			echo $request->param('title')
 				. $request->param('id');
 		});
-		dispatch( '/posts/this-is-a-title-123' );
+		klein_dispatch( '/posts/this-is-a-title-123' );
 	}
 
 	public function testFormatMatch() {
@@ -195,7 +195,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond( '/output.[xml|json:format]', function($request){
 			echo $request->param('format');
 		});
-		dispatch( '/output.xml' );
+		klein_dispatch( '/output.xml' );
 	}
 
 	public function testDotSeparator() {
@@ -204,15 +204,15 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond('/[*:cpath]/[:slug].[:format]',   function($rq){ echo 'matchA:slug='.$rq->param("slug").'--';});
 		respond('/[*:cpath]/[:slug].[:format]?',  function($rq){ echo 'matchB:slug='.$rq->param("slug").'--';});
 		respond('/[*:cpath]/[a:slug].[:format]?', function($rq){ echo 'matchC:slug='.$rq->param("slug").'--';});
-		dispatch("/category1/categoryX/ABCD_E.php");
+		klein_dispatch("/category1/categoryX/ABCD_E.php");
 
 		$this->assertOutputSame(
 			'matchA:slug=ABCD_E--matchB:slug=ABCD_E--',
-			function(){dispatch( '/category1/categoryX/ABCD_E.php' );}
+			function(){klein_dispatch( '/category1/categoryX/ABCD_E.php' );}
 		);
 		$this->assertOutputSame(
 			'matchB:slug=ABCD_E--',
-			function(){dispatch( '/category1/categoryX/ABCD_E' );}
+			function(){klein_dispatch( '/category1/categoryX/ABCD_E' );}
 		);
 	}
 
@@ -223,7 +223,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 			echo $request->param('controller')
 				. '-' . $request->param('action');
 		});
-		dispatch( '/donkey/kick' );
+		klein_dispatch( '/donkey/kick' );
 	}
 
 	public function testRespondArgumentOrder() {
@@ -235,61 +235,61 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond( 'GET', null, function(){ echo 'd'; });
 		respond( array( 'GET', 'POST' ), null, function(){ echo 'e'; });
 		respond( array( 'GET', 'POST' ), '/endpoint', function(){ echo 'f'; });
-		dispatch( '/endpoint' );
+		klein_dispatch( '/endpoint' );
 	}
 
 	public function testTrailingMatch() {
 		respond( '/?[*:trailing]/dog/?', function($request){ echo 'yup'; });
 
-		$this->assertOutputSame( 'yup', function(){ dispatch('/cat/dog'); });
-		$this->assertOutputSame( 'yup', function(){ dispatch('/cat/cheese/dog'); });
-		$this->assertOutputSame( 'yup', function(){ dispatch('/cat/ball/cheese/dog/'); });
-		$this->assertOutputSame( 'yup', function(){ dispatch('/cat/ball/cheese/dog'); });
-		$this->assertOutputSame( 'yup', function(){ dispatch('cat/ball/cheese/dog/'); });
-		$this->assertOutputSame( 'yup', function(){ dispatch('cat/ball/cheese/dog'); });
+		$this->assertOutputSame( 'yup', function(){ klein_dispatch('/cat/dog'); });
+		$this->assertOutputSame( 'yup', function(){ klein_dispatch('/cat/cheese/dog'); });
+		$this->assertOutputSame( 'yup', function(){ klein_dispatch('/cat/ball/cheese/dog/'); });
+		$this->assertOutputSame( 'yup', function(){ klein_dispatch('/cat/ball/cheese/dog'); });
+		$this->assertOutputSame( 'yup', function(){ klein_dispatch('cat/ball/cheese/dog/'); });
+		$this->assertOutputSame( 'yup', function(){ klein_dispatch('cat/ball/cheese/dog'); });
 	}
 
 	public function testTrailingPossessiveMatch() {
 		respond( '/sub-dir/[**:trailing]', function($request){ echo 'yup'; });
 
-		$this->assertOutputSame( 'yup', function(){ dispatch('/sub-dir/dog'); });
-		$this->assertOutputSame( 'yup', function(){ dispatch('/sub-dir/cheese/dog'); });
-		$this->assertOutputSame( 'yup', function(){ dispatch('/sub-dir/ball/cheese/dog/'); });
-		$this->assertOutputSame( 'yup', function(){ dispatch('/sub-dir/ball/cheese/dog'); });
+		$this->assertOutputSame( 'yup', function(){ klein_dispatch('/sub-dir/dog'); });
+		$this->assertOutputSame( 'yup', function(){ klein_dispatch('/sub-dir/cheese/dog'); });
+		$this->assertOutputSame( 'yup', function(){ klein_dispatch('/sub-dir/ball/cheese/dog/'); });
+		$this->assertOutputSame( 'yup', function(){ klein_dispatch('/sub-dir/ball/cheese/dog'); });
 	}
 
 	public function testNSDispatch() {
-		inNamespace('/u', function () {
+		klein_with('/u', function () {
 			respond('GET', '/?',     function ($request, $response) { echo "slash";   });
 			respond('GET', '/[:id]', function ($request, $response) { echo "id"; });
 		});
-		respond(404, function ($request, $response) { echo "404"; });
+		klein_respond(404, function ($request, $response) { echo "404"; });
 
-		$this->assertOutputSame("slash",          function(){dispatch("/u");});
-		$this->assertOutputSame("slash",          function(){dispatch("/u/");});
-		$this->assertOutputSame("id",             function(){dispatch("/u/35");});
-		$this->assertOutputSame("404",             function(){dispatch("/35");});
+		$this->assertOutputSame("slash",          function(){klein_dispatch("/u");});
+		$this->assertOutputSame("slash",          function(){klein_dispatch("/u/");});
+		$this->assertOutputSame("id",             function(){klein_dispatch("/u/35");});
+		$this->assertOutputSame("404",             function(){klein_dispatch("/35");});
 	}
 
 	public function testNSDispatchExternal() {
 		$ext_namespaces = $this->loadExternalRoutes();
 
-		respond(404, function ($request, $response) { echo "404"; });
+		klein_respond(404, function ($request, $response) { echo "404"; });
 
 		foreach ( $ext_namespaces as $namespace ) {
-			$this->assertOutputSame('yup',  function() use ( $namespace ) { dispatch( $namespace . '/' ); });
-			$this->assertOutputSame('yup',  function() use ( $namespace ) { dispatch( $namespace . '/testing/' ); });
+			$this->assertOutputSame('yup',  function() use ( $namespace ) { klein_dispatch( $namespace . '/' ); });
+			$this->assertOutputSame('yup',  function() use ( $namespace ) { klein_dispatch( $namespace . '/testing/' ); });
 		}
 	}
 
 	public function testNSDispatchExternalRerequired() {
 		$ext_namespaces = $this->loadExternalRoutes();
 
-		respond(404, function ($request, $response) { echo "404"; });
+		klein_respond(404, function ($request, $response) { echo "404"; });
 
 		foreach ( $ext_namespaces as $namespace ) {
-			$this->assertOutputSame('yup',  function() use ( $namespace ) { dispatch( $namespace . '/' ); });
-			$this->assertOutputSame('yup',  function() use ( $namespace ) { dispatch( $namespace . '/testing/' ); });
+			$this->assertOutputSame('yup',  function() use ( $namespace ) { klein_dispatch( $namespace . '/' ); });
+			$this->assertOutputSame('yup',  function() use ( $namespace ) { klein_dispatch( $namespace . '/testing/' ); });
 		}
 	}
 
@@ -298,13 +298,13 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 
 		$this->expectOutputString( '_' );
 
-		respond( function(){ echo '_'; });
-		respond( 'GET', null, function(){ echo 'fail'; });
-		respond( array( 'GET', 'POST' ), null, function(){ echo 'fail'; });
-		respond( 405, function($a,$b,$c,$d,$methods) use ( &$resultArray ) {
+		klein_respond( function(){ echo '_'; });
+		klein_respond( 'GET', null, function(){ echo 'fail'; });
+		klein_respond( array( 'GET', 'POST' ), null, function(){ echo 'fail'; });
+		klein_respond( 405, function($a,$b,$c,$d,$methods) use ( &$resultArray ) {
 			$resultArray = $methods;
 		});
-		dispatch( '/sure', 'DELETE' );
+		klein_dispatch( '/sure', 'DELETE' );
 
 		$this->assertCount( 2, $resultArray );
 		$this->assertContains( 'GET', $resultArray );
