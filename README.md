@@ -10,10 +10,14 @@ All kudos to the original author.
 
 1. PHP 5.2.17 is required
 2. Setup [URL rewriting](https://gist.github.com/874000) so that all requests are handled by **index.php**
-3. Add `<?php require 'klein.php';` as your first line and `dispatch();` as your last
-4. (Optional) Throw in some [APC](http://pecl.php.net/package/APC) for good measure
+3. Use `<?php require 'klein_load.php';` 
+4. use the `klein_load()` function to load a PHP 5.2+ compatible, not namespaced version of `klein` (as the original) or use `klein_wp_load()` to load a `klein_` prefixed, PHP 5.2+ and WordPress compatible version of the library
+5. (Optional) Throw in some [APC](http://pecl.php.net/package/APC) for good measure; the version of the library loaded with `klein_wp_load()` will rely on WordPress caching functions
 
 ## Example
+
+In all the examples below the the not prefixed functions and class names from the not version of the library loaded with `klein_load()` are shown; add a `klein_` prefix to each function and class name if the library was loaded using `klein_wp_load`.  
+Only exception to the above rule: the `inNamespace()` function of the default library transalates to the `klein_with` function in the WordPress compatible version of the library.  
 
 *Example 1* - Respond to all requests
 
