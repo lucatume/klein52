@@ -20,7 +20,7 @@ class AppServiceTest extends PHPUnit_Framework_TestCase {
 
 		$app->objectOne = new ObjectOne();
 
-		$this->assertInstanceOf( ObjectOne::class, $app->objectOne );
+		$this->assertInstanceOf( 'ObjectOne', $app->objectOne );
 	}
 
 	/**
@@ -38,8 +38,8 @@ class AppServiceTest extends PHPUnit_Framework_TestCase {
 		global $constructed;
 		$this->assertEmpty( $constructed );
 
-		$this->assertInstanceOf( ObjectOne::class, $app->objectOne );
-		$this->assertContains( ObjectOne::class, $constructed );
+		$this->assertInstanceOf( 'ObjectOne', $app->objectOne );
+		$this->assertContains( 'ObjectOne', $constructed );
 	}
 
 	/**
