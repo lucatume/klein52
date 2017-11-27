@@ -941,18 +941,18 @@ class klein_Validator {
 
 	// Adds default validators on first use. See README for usage details
 	public static function addDefault() {
-		self::$_methods['null']     = array( self, 'validateNull' );
-		self::$_methods['len']      = array( self, 'validateLen' );
-		self::$_methods['int']      = array( self, 'validateInt' );
-		self::$_methods['float']    = array( self, 'validateFloat' );
-		self::$_methods['email']    = array( self, 'validateEmail' );
-		self::$_methods['url']      = array( self, 'validateUrl' );
-		self::$_methods['ip']       = array( self, 'validateIp' );
-		self::$_methods['alnum']    = array( self, 'validateAlnum' );
-		self::$_methods['alpha']    = array( self, 'validateAlpha' );
-		self::$_methods['contains'] = array( self, 'validateContains' );
-		self::$_methods['regex']    = array( self, 'validateRegex' );
-		self::$_methods['chars']    = array( self, 'validateChars' );
+		self::$_methods['null']     = array( __CLASS__, 'validateNull' );
+		self::$_methods['len']      = array( __CLASS__, 'validateLen' );
+		self::$_methods['int']      = array( __CLASS__, 'validateInt' );
+		self::$_methods['float']    = array( __CLASS__, 'validateFloat' );
+		self::$_methods['email']    = array( __CLASS__, 'validateEmail' );
+		self::$_methods['url']      = array( __CLASS__, 'validateUrl' );
+		self::$_methods['ip']       = array( __CLASS__, 'validateIp' );
+		self::$_methods['alnum']    = array( __CLASS__, 'validateAlnum' );
+		self::$_methods['alpha']    = array( __CLASS__, 'validateAlpha' );
+		self::$_methods['contains'] = array( __CLASS__, 'validateContains' );
+		self::$_methods['regex']    = array( __CLASS__, 'validateRegex' );
+		self::$_methods['chars']    = array( __CLASS__, 'validateChars' );
 	}
 
 	/**
