@@ -872,18 +872,18 @@ class _Validator {
 
 	// Adds default validators on first use. See README for usage details
 	public static function addDefault() {
-		self::$_methods['null']     = array( self, 'validateNull' );
-		self::$_methods['len']      = array( self, 'validateLen' );
-		self::$_methods['int']      = array( self, 'validateInt' );
-		self::$_methods['float']    = array( self, 'validateFloat' );
-		self::$_methods['email']    = array( self, 'validateEmail' );
-		self::$_methods['url']      = array( self, 'validateUrl' );
-		self::$_methods['ip']       = array( self, 'validateIp' );
-		self::$_methods['alnum']    = array( self, 'validateAlnum' );
-		self::$_methods['alpha']    = array( self, 'validateAlpha' );
-		self::$_methods['contains'] = array( self, 'validateContains' );
-		self::$_methods['regex']    = array( self, 'validateRegex' );
-		self::$_methods['chars']    = array( self, 'validateChars' );
+		self::$_methods['null']     = array( '_Validator', 'validateNull' );
+		self::$_methods['len']      = array( '_Validator', 'validateLen' );
+		self::$_methods['int']      = array( '_Validator', 'validateInt' );
+		self::$_methods['float']    = array( '_Validator', 'validateFloat' );
+		self::$_methods['email']    = array( '_Validator', 'validateEmail' );
+		self::$_methods['url']      = array( '_Validator', 'validateUrl' );
+		self::$_methods['ip']       = array( '_Validator', 'validateIp' );
+		self::$_methods['alnum']    = array( '_Validator', 'validateAlnum' );
+		self::$_methods['alpha']    = array( '_Validator', 'validateAlpha' );
+		self::$_methods['contains'] = array( '_Validator', 'validateContains' );
+		self::$_methods['regex']    = array( '_Validator', 'validateRegex' );
+		self::$_methods['chars']    = array( '_Validator', 'validateChars' );
 	}
 
 	/**
