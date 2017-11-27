@@ -8,6 +8,7 @@
             <file>tests/WPHeadersTest.php</file>
             <file >tests/WPRoutes52Test.php</file>
             <file phpVersion="5.3.0" phpVersionOperator=">=">tests/WPRoutesTest.php</file>
+            <file phpVersion="5.3.0" phpVersionOperator=">=">tests/AppServiceTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

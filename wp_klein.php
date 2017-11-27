@@ -1096,7 +1096,7 @@ class klein_Validator {
  */
 class klein_App {
 
-	protected $services = array();
+	protected $services         = array();
 	protected $serviceInstances = array();
 
 	// Check for a lazy service
@@ -1104,9 +1104,12 @@ class klein_App {
 		if ( ! isset( $this->services[ $name ] ) ) {
 			throw new InvalidArgumentException( "Unknown service $name" );
 		}
-		$service = $this->services[ $name ];
 
-		return $service();
+		if ( ! isset( $this->serviceInstances[ $name ] ) ) {
+			$this->serviceInstances[ $name ] = call_user_func( $this->services[$name] );
+		}
+
+		return $this->serviceInstances[ $name ];
 	}
 
 	// Call a class property like a method
@@ -1123,11 +1126,9 @@ class klein_App {
 		if ( isset( $this->services[ $name ] ) ) {
 			throw new Exception( "A service is already registered under $name" );
 		}
-		if ( null === $this->serviceInstances[ $name ] ) {
-			$this->serviceInstances[ $name ] = call_user_func( $callable );
+		if ( empty($this->serviceInstances[ $name ]) ) {
+			$this->services[ $name ] = $callable;
 		}
-
-		return $this->serviceInstances[ $name ];
 	}
 }
 
