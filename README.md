@@ -19,7 +19,7 @@ All kudos to the original author.
 In all the examples below the the not prefixed functions and class names from the not version of the library loaded with `klein_load()` are shown; add a `klein_` prefix to each function and class name if the library was loaded using `klein_wp_load`.  
 Only exception to the above rule: the `inNamespace()` function of the default library transalates to the `klein_with` function in the WordPress compatible version of the library.  
 
-*Example 1* - Respond to all requests
+*Example 1.1* - Respond to all requests (PHP 5.3 syntax)
 
 ```php
 <?php
@@ -27,6 +27,19 @@ respond(function () {
     echo 'Hello World!';
 });
 ```
+
+*Example 1.2* - Respond to all requests (PHP 5.2 syntax)
+
+```php
+<?php
+function handleAll(){
+    echo 'Hello World!';
+}
+
+respond('handleAll');
+```
+
+**Note**: in all of the examples below I will use PHP 5.3+ compatible code for brevity; to make any example work with PHP 5.2 compatible syntax replace any closure with a named function (see Example 1.2).
 
 *Example 2* - Named parameters
 
